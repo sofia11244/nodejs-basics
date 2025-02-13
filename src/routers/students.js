@@ -8,7 +8,7 @@ import {
   createStudentController,
   deleteStudentController,
   upsertStudentController,
-
+  patchStudentController,
 } from '../controllers/students.js';
 
 const router = Router();
@@ -24,5 +24,7 @@ router.post('/students', ctrlWrapper(createStudentController));
 router.delete('/students/:studentId', ctrlWrapper(deleteStudentController));
 
 router.put('/students/:studentId', ctrlWrapper(upsertStudentController));
+
+router.patch('/students/:studentId', ctrlWrapper(patchStudentController));
 
 export default router;
