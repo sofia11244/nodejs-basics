@@ -48,3 +48,18 @@ export const getStudentByIdController = async (
     data: student,
   });
 };
+
+// src/controllers/students.js
+
+import { createStudent } from '../services/students.js';
+
+export const createStudentController = async (req, res) => {
+  const student = await createStudent(req.body);
+
+  res.status(201).json({
+    status: 201,
+    message: `Successfully created a student!`,
+    data: student,
+  });
+};
+
