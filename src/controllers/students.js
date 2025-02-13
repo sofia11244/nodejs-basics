@@ -63,3 +63,17 @@ export const createStudentController = async (req, res) => {
   });
 };
 
+import { deleteStudent } from "../services/students.js";
+
+export const deleteStudentController = async (req, res, next) => {
+  const { studentId } = req.params;
+
+  const student = await deleteStudent(studentId);
+
+  if (!student) {
+    next(createHttpError(404, 'Student not found'));
+    return;
+  }
+
+  res.status(204).send();
+};
