@@ -77,3 +77,31 @@ export const deleteStudentController = async (req, res, next) => {
 
   res.status(204).send();
 };
+
+// "Update" (güncelleme) ve "Insert" (ekleme) kelimelerinin birleşiminden türetilmiştir. 
+// Upsert işlemi, veritabanlarında, eğer belirli bir kayıt mevcutsa güncellenmesini, yoksa yeni bir kayıt oluşturulmasını sağlar.
+// src/controllers/students.js
+
+
+import { updateStudent } from "../services/students.js";
+
+export const upsertStudentController = async (req, res, next) => {
+  const { studentId } = req.params;
+
+  const result = await updateStudent(studentId, req.body, {
+    upsert: true,
+  });
+
+  if (!result) {
+    next(createHttpError(404, 'Student not found'));
+    return;
+  }
+
+  const status = result.isNew ? 201 : 200;
+
+  res.status(status).json({
+    status,
+    message: `Successfully upserted a student!`,
+    data: result.student,
+  });
+};
