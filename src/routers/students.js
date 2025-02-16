@@ -4,6 +4,7 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { createStudentSchema } from '../validation/students.js';
 import { updateStudentSchema } from '../validation/students.js';
+import { isValidId } from '../middlewares/isValidId.js';
 
 import {
   getStudentsController,
@@ -20,7 +21,11 @@ const router = Router();
 // router.get('/students/:studentId', getStudentByIdController);
 router.get('/students', ctrlWrapper(getStudentsController));
 
-router.get('/students/:studentId', ctrlWrapper(getStudentByIdController));
+router.get(
+  '/:studentId',
+  isValidId,
+  ctrlWrapper(getStudentByIdController),
+);
 
 router.post(
   '/',
