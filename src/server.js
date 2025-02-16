@@ -56,3 +56,4 @@ export const startServer = () => {
 // ya da böyle:
 
 
+// server.js sadece middleware'leri ve router'ları yükleyen bir dosya.
