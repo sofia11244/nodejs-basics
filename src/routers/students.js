@@ -33,6 +33,13 @@ router.post(
   ctrlWrapper(createStudentController),
 );
 
+router.post(
+  '/register',
+  validateBody(createStudentSchema),
+  ctrlWrapper(createStudentController),
+);
+
+
 router.delete('/students/:studentId', ctrlWrapper(deleteStudentController));
 
 router.put('/students/:studentId', ctrlWrapper(upsertStudentController));

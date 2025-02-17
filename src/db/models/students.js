@@ -59,3 +59,15 @@ export const StudentsCollection = model('students', studentsSchema);
 
 // versionKey — belgenin sürümlerini izlemek için __v alanının oluşturulup oluşturulmayacağını belirtir. 
 // Bizim durumumuzda bu alanın oluşturulmaması için false olarak ayarlıyoruz.
+
+
+const usersSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+  },
+  { timestamps: true, versionKey: false },
+);
+
+export const UsersCollection = model('users', usersSchema);
