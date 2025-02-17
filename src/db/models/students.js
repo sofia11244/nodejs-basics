@@ -1,6 +1,6 @@
 // src/db/models/student.js
 
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
 const studentsSchema = new Schema(
   {
@@ -26,11 +26,12 @@ const studentsSchema = new Schema(
       required: true,
       default: false,
     },
+    parentId: { type: Schema.Types.ObjectId, ref: 'users' },  // yeni özellik
   },
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 // Exporting the model so it can be used elsewhere
@@ -60,12 +61,19 @@ export const StudentsCollection = model('students', studentsSchema);
 // versionKey — belgenin sürümlerini izlemek için __v alanının oluşturulup oluşturulmayacağını belirtir. 
 // Bizim durumumuzda bu alanın oluşturulmaması için false olarak ayarlıyoruz.
 
+import { ROLES } from '../../constants/index.js';
 
 const usersSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+
+    role: {
+      type: String,
+      enum: [ROLES.TEACHER, ROLES.PARENT],
+      default: ROLES.PARENT,
+    },
   },
   { timestamps: true, versionKey: false },
 );

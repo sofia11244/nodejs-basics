@@ -29,6 +29,7 @@ export const createStudentSchema = Joi.object({
   onDuty: Joi.boolean().messages({
     'boolean.base': 'onDuty must be true or false',
   }),
+  parentId: Joi.string().required(),
 });
 
 // Kullanım örneği

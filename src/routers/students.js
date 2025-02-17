@@ -5,6 +5,8 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { createStudentSchema } from '../validation/students.js';
 import { updateStudentSchema } from '../validation/students.js';
 import { isValidId } from '../middlewares/isValidId.js';
+import { checkRoles } from '../middlewares/checkRoles.js';
+import { ROLES } from '../constants/index.js';
 
 import {
   getStudentsController,
@@ -17,33 +19,59 @@ import {
 
 const router = Router();
 
-// router.get('/students', getStudentsController);
-// router.get('/students/:studentId', getStudentByIdController);
-router.get('/students', ctrlWrapper(getStudentsController));
+// Apply role-based access control for each route
 
+// Get all students (only accessible by TEACHER role)
+router.get('/students', checkRoles(ROLES.TEACHER), ctrlWrapper(getStudentsController));
+
+// Get student by ID (accessible by TEACHER or PARENT roles)
 router.get(
-  '/:studentId',
+  '/students/:studentId',
+  checkRoles(ROLES.TEACHER, ROLES.PARENT),
   isValidId,
   ctrlWrapper(getStudentByIdController),
 );
 
+// Create a new student (only accessible by TEACHER role)
 router.post(
-  '/',
+  '/students',
+  checkRoles(ROLES.TEACHER),
   validateBody(createStudentSchema),
   ctrlWrapper(createStudentController),
 );
 
+// Register a new student (also only accessible by TEACHER role)
 router.post(
-  '/register',
+  '/students/register',
+  checkRoles(ROLES.TEACHER),
   validateBody(createStudentSchema),
   ctrlWrapper(createStudentController),
 );
 
+// Delete a student (only accessible by TEACHER role)
+router.delete(
+  '/students/:studentId',
+  checkRoles(ROLES.TEACHER),
+  isValidId,
+  ctrlWrapper(deleteStudentController),
+);
 
-router.delete('/students/:studentId', ctrlWrapper(deleteStudentController));
+// Upsert student (only accessible by TEACHER role)
+router.put(
+  '/students/:studentId',
+  checkRoles(ROLES.TEACHER),
+  isValidId,
+  validateBody(createStudentSchema),
+  ctrlWrapper(upsertStudentController),
+);
 
-router.put('/students/:studentId', ctrlWrapper(upsertStudentController));
-
-router.patch('/students/:studentId',validateBody(updateStudentSchema), ctrlWrapper(patchStudentController));
+// Update student (only accessible by TEACHER or PARENT roles)
+router.patch(
+  '/students/:studentId',
+  checkRoles(ROLES.TEACHER, ROLES.PARENT),
+  isValidId,
+  validateBody(updateStudentSchema),
+  ctrlWrapper(patchStudentController),
+);
 
 export default router;
