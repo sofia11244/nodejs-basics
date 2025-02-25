@@ -75,3 +75,34 @@ router.patch(
 );
 
 export default router;
+
+import { upload } from '../middlewares/multer.js';
+
+/* Dosyanın diğer kodları */
+
+router.post(
+  '/',
+  checkRoles(ROLES.TEACHER),
+  isValidId,
+  upload.single('photo'), // bu middleware'i ekliyoruz
+  validateBody(createStudentSchema),
+  ctrlWrapper(createStudentController),
+);
+
+router.put(
+  '/:studentId',
+  checkRoles(ROLES.TEACHER),
+  isValidId,
+  upload.single('photo'), // bu middleware'i ekliyoruz
+  validateBody(createStudentSchema),
+  ctrlWrapper(upsertStudentController),
+);
+
+router.patch(
+  '/:studentId',
+  checkRoles(ROLES.TEACHER, ROLES.PARENT),
+  isValidId,
+  upload.single('photo'), // bu middleware'i ekliyoruz
+  validateBody(updateStudentSchema),
+  ctrlWrapper(patchStudentController),
+);

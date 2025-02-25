@@ -5,7 +5,7 @@ import pino from 'pino-http';
 import cors from 'cors';
 import studentsRouter from './routers/students.js';
 import { env } from './utils/env.js';
-
+import { UPLOAD_DIR } from './constants/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import cookieParser from 'cookie-parser';
@@ -44,6 +44,8 @@ export const startServer = () => {
   });
 
   app.use(cookieParser());
+  
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
 };
 
